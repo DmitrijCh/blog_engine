@@ -1,0 +1,17 @@
+spring:
+  web:
+    resourses:
+      static-locations:
+        - file:src/main/resources/public/
+        - classpath:/public/
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?useSSL=false
+    username: dim
+    password: mypassword
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+someParameter:
+  value: 5463
+

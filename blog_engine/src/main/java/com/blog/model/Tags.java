@@ -1,6 +1,6 @@
 package com.blog.model;
 
-
+import lombok.Data;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "tags")
 public class Tags {

@@ -2,16 +2,21 @@ package com.blog.model;
 
 import com.blog.model.enums.ModerationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Data
 @Entity
+@ToString(exclude = "tagList")
 @Table(name = "posts")
 public class Posts {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,8 +57,21 @@ public class Posts {
             name = "tag2post",
             joinColumns = {@JoinColumn(name = "post_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private final List<Tags> tagList = new ArrayList<>();
+    private List<Tags> tagList = new ArrayList<>();
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL)
     private List<PostVotes> postVoteList;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Posts posts = (Posts) o;
+        return id != null && Objects.equals(id, posts.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

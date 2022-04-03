@@ -15,7 +15,7 @@ public class DefaultController {
     }
 
     @RequestMapping("/")
-    public String index (Model model) {
+    public String index(Model model) {
         System.out.println(initResponse.getTitle());
         System.out.println(initResponse.getSubtitle());
         System.out.println(initResponse.getCopyright());

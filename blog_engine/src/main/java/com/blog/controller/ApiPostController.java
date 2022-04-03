@@ -4,9 +4,7 @@ import com.blog.api.request.PostRequest;
 import com.blog.api.response.PostResponse;
 import com.blog.service.PostService;
 import lombok.AllArgsConstructor;
-
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @AllArgsConstructor

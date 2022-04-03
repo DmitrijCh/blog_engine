@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.util.List;
 
-
 @Data
 public class TagResponse {
     private List<ListTag> tags;
@@ -17,5 +16,4 @@ public class TagResponse {
     public void add(List<ListTag> tags) {
         this.tags.addAll(tags);
     }
-
 }

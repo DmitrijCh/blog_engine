@@ -1,5 +1,6 @@
 package com.blog.model;
 
+
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;

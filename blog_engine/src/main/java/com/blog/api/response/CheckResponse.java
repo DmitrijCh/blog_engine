@@ -1,28 +1,17 @@
 package com.blog.api.response;
 
-import com.blog.model.Users;
+import com.blog.api.response.type.UserAuth;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
+@Data
 public class CheckResponse {
+    private boolean result;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private UserAuth user;
 
-    private Boolean result;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Users users;
-
-    public Boolean getResult() {
-        return result;
-    }
-
-    public void setResult(Boolean result) {
+    public CheckResponse(boolean result) {
         this.result = result;
-    }
-
-    public Users getUser() {
-        return users;
-    }
-
-    public void setUser(Users user) {
-        this.users = user;
+        this.user = user;
     }
 }

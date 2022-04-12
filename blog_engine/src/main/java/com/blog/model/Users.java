@@ -1,27 +1,29 @@
 package com.blog.model;
 
-import com.blog.model.enums.Role;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.Instant;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Users {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
-    @Column(name = "is_moderator", nullable = false)
-    private Byte isModerator;
+    @Column(name = "is_moderator", nullable = false, columnDefinition = "TINYINT")
+    private boolean isModerator = false;
 
     @Column(name = "reg_time", nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
-    private LocalDateTime regTime;
+    private Instant regTime;
 
     @Column(nullable = false)
     private String name;
@@ -29,24 +31,11 @@ public class Users {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(name = "password", nullable = false)
+    private String passwordHash;
 
-    @Column(nullable = false)
     private String code;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "photo", columnDefinition = "text")
     private String photo;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Posts> postList;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PostComments> postCommentList;
-
-    public Role getRole() {
-        return isModerator == 1 ? Role.MODERATOR : Role.USER;
-    }
 }

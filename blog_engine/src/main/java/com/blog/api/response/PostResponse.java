@@ -1,29 +1,19 @@
 package com.blog.api.response;
 
-import com.fasterxml.jackson.annotation.*;
+import com.blog.api.response.type.ListPost;
 import lombok.Data;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class PostResponse {
-    private List<PostResponse> posts;
+    private List<ListPost> posts;
+    private long count;
 
-    public PostResponse() {
-        posts = new ArrayList<>();
-    }
-
-    public PostResponse(List<PostResponse> posts) {
+    public PostResponse(List<ListPost> posts) {
         this.posts = posts;
     }
 
-    public void add(List<PostResponse> posts) {
+    public void add(List<ListPost> posts) {
         this.posts.addAll(posts);
-    }
-
-    @JsonGetter("count")
-    public int count() {
-        return posts.size();
     }
 }

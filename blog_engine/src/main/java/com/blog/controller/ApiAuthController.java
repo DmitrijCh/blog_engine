@@ -1,9 +1,8 @@
 package com.blog.controller;
 
+import com.blog.api.request.LoginRequest;
 import com.blog.api.request.RegisterRequest;
-import com.blog.api.response.CaptchaResponse;
-import com.blog.api.response.CheckResponse;
-import com.blog.api.response.RegisterResponse;
+import com.blog.api.response.*;
 import com.blog.service.CheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +34,15 @@ public class ApiAuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(checkService.register(request));
+    }
+
+    @PostMapping("/api/auth/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(checkService.login(request));
+    }
+
+    @GetMapping("/api/auth/logout")
+    public ResponseEntity<LogoutResponse> logout() {
+        return ResponseEntity.ok(checkService.logout());
     }
 }

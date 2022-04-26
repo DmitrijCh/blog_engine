@@ -1,9 +1,9 @@
 package com.blog.service;
 
+import com.blog.api.request.LoginRequest;
 import com.blog.api.request.RegisterRequest;
-import com.blog.api.response.CaptchaResponse;
-import com.blog.api.response.CheckResponse;
-import com.blog.api.response.RegisterResponse;
+import com.blog.api.response.*;
+import com.blog.api.response.type.UserAuth;
 import com.blog.model.CaptchaCodes;
 import com.blog.model.Users;
 import com.blog.repository.CaptchaRepository;
@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,7 @@ public class CheckService {
     private final CaptchaRepository captchaRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${app.param.captcha.height}")
     private int captchaHeight;
@@ -122,5 +124,22 @@ public class CheckService {
         if (captchaRepository.countBySecretCodeAndCode(secret, code) == 0) {
             errors.put("captcha", "Код с картинки введён неверно");
         }
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        Authentication authentication
+                = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return new LoginResponse();
+    }
+
+    public LogoutResponse logout() {
+        SecurityContextHolder.clearContext();
+
+        return new LogoutResponse();
     }
 }

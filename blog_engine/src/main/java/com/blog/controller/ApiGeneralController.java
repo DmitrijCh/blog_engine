@@ -23,10 +23,10 @@ public class ApiGeneralController {
     private final TagService tagService;
     private final CalendarService calendarService;
 
-    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, TagService tagService, CalendarService calendarService) {
+    public ApiGeneralController(InitResponse initResponse, SettingsService settingsService, CalendarService calendarService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
-        this.tagService = tagService;
+        this.tagService = new TagService(null);
         this.calendarService = calendarService;
     }
 

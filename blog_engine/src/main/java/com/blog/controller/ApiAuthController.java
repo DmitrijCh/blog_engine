@@ -36,13 +36,14 @@ public class ApiAuthController {
         return ResponseEntity.ok(checkService.register(request));
     }
 
-    @PostMapping("/api/auth/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(checkService.login(request));
     }
 
-    @GetMapping("/api/auth/logout")
+    @GetMapping("/auth/logout")
     public ResponseEntity<LogoutResponse> logout() {
         return ResponseEntity.ok(checkService.logout());
     }
 }
+

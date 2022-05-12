@@ -4,15 +4,13 @@ package com.blog.repository;
 import com.blog.model.Posts;
 import com.blog.model.enums.ModerationStatus;
 import com.blog.model.query.PostCount;
+import com.blog.model.query.Statistic;
 import com.sun.istack.NotNull;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
 import java.util.List;
 
 
@@ -43,6 +41,27 @@ public interface PostRepository extends JpaRepository<Posts, Integer> {
             nativeQuery = true
     )
     long countPostSearch(@NotNull String search, String byDate, String tag);
+
+    @Query(
+            value = "SELECT p_stat.postsCount, " +
+                    "       v_stat.likesCount, " +
+                    "       v_stat.dislikesCount, " +
+                    "       p_stat.viewsCount, " +
+                    "       p_stat.firstPublication " +
+                    "FROM (SELECT COUNT(p.id) AS postsCount, " +
+                    "             IFNULL(SUM(p.view_count), 0) AS viewsCount, " +
+                    "             MIN(p.time) AS firstPublication " +
+                    "      FROM posts p " +
+                    "      WHERE p.user_id = :userId OR :userId = 0 " +
+                    "     ) p_stat, " +
+                    "     (SELECT IFNULL(SUM(pv.value), 0) AS likesCount, " +
+                    "             IFNULL(COUNT(pv.id) - SUM(pv.value), 0) AS dislikesCount " +
+                    "      FROM post_votes pv, posts p " +
+                    "      WHERE pv.post_id = p.id AND (p.user_id = :userId OR :userId = 0) " +
+                    "     ) v_stat",
+            nativeQuery = true
+    )
+    Statistic getStatistic(int userId);
 
     List<Integer> getAllYear();
 }

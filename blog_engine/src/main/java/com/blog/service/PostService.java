@@ -2,15 +2,20 @@ package com.blog.service;
 
 import com.blog.api.request.PostRequest;
 import com.blog.api.response.PostResponse;
+import com.blog.api.response.ResultResponse;
 import com.blog.api.response.type.ListPost;
+import com.blog.core.ContextUtilities;
+import com.blog.model.PostVotes;
 import com.blog.model.Posts;
 import com.blog.model.enums.ModerationStatus;
 import com.blog.repository.PostRepository;
+import com.blog.repository.PostVotesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final EntityManager entityManager;
+    private final PostVotesRepository postVotesRepository;
 
     public PostResponse response(PostRequest request) {
         String search = Optional.ofNullable(request.getQuery()).orElse("");
@@ -48,6 +54,28 @@ public class PostService {
         listPostResponse.setCount(postRepository.countPostSearch(search, byDate, tag));
 
         return listPostResponse;
+    }
+
+    public ResultResponse like(boolean value, int postId) {
+        PostVotes postVotes = postVotesRepository.findByPostIdAndUserId(
+                postId,
+                ContextUtilities.getCurrentUserId()
+        ).orElse(
+                PostVotes.builder()
+                        .postId(postId)
+                        .userId(ContextUtilities.getCurrentUserId())
+                        .build()
+        );
+
+        ResultResponse result = new ResultResponse(postVotes.getId() == 0 || postVotes.isValue() != value);
+
+        postVotes.setTime(Instant.now());
+        postVotes.setValue(value);
+
+        System.out.println(postVotes);
+
+        postVotesRepository.save(postVotes);
+        return result;
     }
 
     public long countPostInModeration() {
